@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 这里可以添加一些全局样式覆盖 */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 隐藏滚动条但保留功能 (可选，为了极简UI) */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* 防止出现双重滚动条 */
+  background-color: #f5f5f7;
+}
+
+.dark {
+  background-color: #000000;
+}
+
+.dark body {
+  background-color: #000000;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+/* 选中文本颜色 - 圈内高贵紫 */
+::selection {
+  background: #6366f1;
+  color: white;
+}
+
+/* 输入框聚焦时移除默认边框 */
+input:focus, textarea:focus {
+  outline: none;
+}
+
+/* 强制铺满全屏，防止白屏 */
+html, body, #app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 防止滚动条 */
+  background-color: #f5f5f7; /* 给一个背景色，验证是否只是内容没刷出来 */
+  /* 防止窗口大小变化时的闪屏 */
+  will-change: auto;
+  transform: translateZ(0); /* 启用硬件加速 */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  /* 优化窗口大小变化时的渲染 */
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+}
+
+/* 字体优化 */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 深色模式 - 纯黑夜间模式 */
+.dark {
+  background-color: #000000 !important;
+}
+
+.dark body {
+  background-color: #000000 !important;
+}
+
+.dark #app {
+  background-color: #000000 !important;
+}
+
+/* 确保编辑器区域始终可以选中文本 */
+textarea,
+[contenteditable="true"],
+#my-easymde-editor,
+#my-text-editor,
+.markdown-preview {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* 窗口大小变化时禁用所有过渡，避免闪屏 */
+.no-transitions,
+.no-transitions *,
+.no-transitions *::before,
+.no-transitions *::after {
+  transition: none !important;
+  animation: none !important;
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -webkit-animation: none !important;
+  -moz-animation: none !important;
+  -o-animation: none !important;
+  /* 强制GPU加速，但禁用过渡 */
+  transform: translateZ(0);
+  will-change: auto;
+}
