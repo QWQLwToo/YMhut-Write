@@ -64,6 +64,7 @@ export default {
   settings: {
     theme: {
       title: '主題模式',
+      themeMode: '主題模式',
       light: '淺色模式',
       dark: '深色模式'
     },
@@ -79,7 +80,9 @@ export default {
       sourceModeDesc: '僅顯示原始碼，隱藏預覽'
     },
     general: {
+      title: '通用設定',
       fontFamily: '寫作字體',
+      followSystem: '跟隨系統',
       fontSize: '預設字號',
       autoSave: '自動儲存',
       autoSaveDesc: '編輯時自動儲存內容',
@@ -108,22 +111,34 @@ export default {
       today: '今天',
       yesterday: '昨天',
       noLogs: '暫無日誌記錄',
-      noLogsDesc: '當出現錯誤時，日誌將自動記錄在這裡'
+      noLogsDesc: '當出現錯誤時，日誌將自動記錄在這裡',
+      copy: '複製',
+      copied: '已複製',
+      copyFailed: '複製失敗'
     }
   },
   
   // 工作區
   workspace: {
     sidebar: {
+      documents: '文稿庫',
+      history: '歷史存檔',
       allDocuments: '所有文稿',
-      history: '歷史記錄',
+      refreshHistory: '重新整理歷史記錄',
       newDocument: '新建文件',
-      openFile: '開啟文件'
+      openFile: '開啟文件',
+      noTitle: '無標題文件',
+      noHistoryBackup: '暫無歷史備份',
+      autoBackup: '文件儲存時會自動建立備份',
+      selectOrCreate: '請選擇或建立文件',
+      noDocumentSelected: '未選擇文件',
+      selectFileFirst: '請先在文稿庫選擇一個文件'
     },
     editor: {
       title: '標題',
       placeholder: '請輸入文件標題...',
       wordCount: '字元',
+      startWriting: '在此處開始你的創作...',
       status: {
         ready: '就緒',
         writing: '同步中...',
@@ -146,11 +161,20 @@ export default {
     convert: {
       title: '格式轉換',
       currentFormat: '目前格式',
-      selectFormat: '選擇目標格式'
+      selectFormat: '選擇目標格式',
+      renameTitle: '重新命名文件'
+    },
+    createModal: {
+      documentName: '文件名稱',
+      documentNamePlaceholder: '輸入文件名稱（可選）',
+      defaultNameHint: '留空將使用預設名稱',
+      documentFormat: '文件格式',
+      plainText: '純文字',
+      plainTextFormat: '純文字格式'
     },
     delete: {
       title: '確認刪除',
-      message: '確定要刪除此文件嗎？',
+      message: '確定要刪除此文件嗎？此操作無法撤銷。',
       deleteFile: '同時刪除文件'
     },
     wordStats: {
@@ -177,6 +201,16 @@ export default {
     exportFailed: '匯出失敗',
     renameFailed: '重新命名失敗',
     convertFailed: '格式轉換失敗',
-    openFileFailed: '開啟文件失敗'
+    convertSuccess: '格式轉換成功！已另存為新文件。',
+    convertSuccessRefresh: '轉換成功，但未找到新文件。請重新整理列表查看。',
+    sameFormat: '格式相同，無需轉換',
+    openFileFailed: '開啟文件失敗',
+    openFailed: '開啟失敗',
+    unknownError: '未知錯誤',
+    selectDocumentFirst: '請先選擇一個文件',
+    inputNewName: '輸入新名稱',
+    restoreVersion: '確定要恢復到 {time} 的版本嗎？\n目前內容將被覆蓋。',
+    restoreSuccess: '恢復成功',
+    restoreTitle: '恢復歷史版本'
   }
 };

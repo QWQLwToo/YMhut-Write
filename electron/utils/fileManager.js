@@ -1,13 +1,32 @@
 const fs = require('fs-extra');
 const path = require('path');
+const crypto = require('crypto');
+const paths = require('./paths');
 
 // 写入队列：防止对同一个文件同时发起多次写入导致文件损坏
 const writeQueues = new Map();
 
 // 临时文件缓存管理器
-const tempFileCache = new Map(); // articleId -> { tempPath, lastSaveTime, timer }
+const tempFileCache = new Map(); // articleId -> { tempPath, lastSaveTime, timer, filePath }
 const TEMP_FILE_SUFFIX = '.cache.tmp';
 const CACHE_SAVE_INTERVAL = 60000; // 1分钟 = 60000毫秒
+
+// 使用安装目录下的 tmp 目录作为临时文件目录
+const TEMP_DIR = paths.tmp;
+// 确保临时目录存在
+fs.ensureDirSync(TEMP_DIR);
+
+/**
+ * 生成临时文件路径（使用安装目录下的 tmp 目录）
+ * @param {string} filePath - 正式文件路径
+ * @returns {string} - 临时文件路径
+ */
+function getTempFilePath(filePath) {
+    // 使用文件路径的哈希值作为临时文件名，避免路径冲突
+    const hash = crypto.createHash('md5').update(filePath).digest('hex');
+    const fileName = path.basename(filePath);
+    return path.join(TEMP_DIR, `${hash}-${fileName}${TEMP_FILE_SUFFIX}`);
+}
 
 /**
  * 原子写入 (Atomic Write)
@@ -87,11 +106,40 @@ async function saveToTempCache(articleId, filePath, content) {
  */
 async function loadFromTempCache(filePath) {
     try {
-        const tempPath = filePath + TEMP_FILE_SUFFIX;
+        const tempPath = getTempFilePath(filePath);
         if (await fs.pathExists(tempPath)) {
             const content = await fs.readFile(tempPath, 'utf-8');
             console.log(`[Cache] Loaded from temp file: ${tempPath}`);
             return content;
+        }
+        // 兼容旧版本：检查文档目录中的临时文件（迁移到安装目录的 tmp 目录）
+        const oldTempPath = filePath + TEMP_FILE_SUFFIX;
+        if (await fs.pathExists(oldTempPath)) {
+            const content = await fs.readFile(oldTempPath, 'utf-8');
+            // 迁移到安装目录的 tmp 目录
+            const newTempPath = getTempFilePath(filePath);
+            await fs.move(oldTempPath, newTempPath, { overwrite: true });
+            console.log(`[Cache] Migrated temp file from ${oldTempPath} to ${newTempPath}`);
+            return content;
+        }
+        
+        // 兼容旧版本：检查系统临时目录中的临时文件（迁移到安装目录的 tmp 目录）
+        try {
+            const os = require('os');
+            const systemTempDir = path.join(os.tmpdir(), 'ymhut-write-cache');
+            const hash = crypto.createHash('md5').update(filePath).digest('hex');
+            const fileName = path.basename(filePath);
+            const oldSystemTempPath = path.join(systemTempDir, `${hash}-${fileName}${TEMP_FILE_SUFFIX}`);
+            if (await fs.pathExists(oldSystemTempPath)) {
+                const content = await fs.readFile(oldSystemTempPath, 'utf-8');
+                // 迁移到安装目录的 tmp 目录
+                const newTempPath = getTempFilePath(filePath);
+                await fs.move(oldSystemTempPath, newTempPath, { overwrite: true });
+                console.log(`[Cache] Migrated temp file from ${oldSystemTempPath} to ${newTempPath}`);
+                return content;
+            }
+        } catch (err) {
+            // 忽略迁移错误
         }
     } catch (error) {
         console.error(`[Cache] Failed to load temp file:`, error);
@@ -107,7 +155,7 @@ async function loadFromTempCache(filePath) {
  */
 async function syncTempToFile(articleId, filePath) {
     try {
-        const tempPath = filePath + TEMP_FILE_SUFFIX;
+        const tempPath = getTempFilePath(filePath);
         
         // 检查临时文件是否存在
         if (await fs.pathExists(tempPath)) {
@@ -130,6 +178,45 @@ async function syncTempToFile(articleId, filePath) {
             console.log(`[Cache] Synced and removed temp file: ${tempPath}`);
             return true;
         }
+        
+        // 兼容旧版本：检查文档目录中的临时文件（迁移并同步）
+        const oldTempPath = filePath + TEMP_FILE_SUFFIX;
+        if (await fs.pathExists(oldTempPath)) {
+            const content = await fs.readFile(oldTempPath, 'utf-8');
+            await queueWrite(filePath, content);
+            await fs.remove(oldTempPath);
+            const cacheInfo = tempFileCache.get(articleId);
+            if (cacheInfo && cacheInfo.timer) {
+                clearInterval(cacheInfo.timer);
+            }
+            tempFileCache.delete(articleId);
+            console.log(`[Cache] Synced and removed old temp file: ${oldTempPath}`);
+            return true;
+        }
+        
+        // 兼容旧版本：检查系统临时目录中的临时文件（迁移并同步）
+        try {
+            const os = require('os');
+            const systemTempDir = path.join(os.tmpdir(), 'ymhut-write-cache');
+            const hash = crypto.createHash('md5').update(filePath).digest('hex');
+            const fileName = path.basename(filePath);
+            const oldSystemTempPath = path.join(systemTempDir, `${hash}-${fileName}${TEMP_FILE_SUFFIX}`);
+            if (await fs.pathExists(oldSystemTempPath)) {
+                const content = await fs.readFile(oldSystemTempPath, 'utf-8');
+                await queueWrite(filePath, content);
+                await fs.remove(oldSystemTempPath);
+                const cacheInfo = tempFileCache.get(articleId);
+                if (cacheInfo && cacheInfo.timer) {
+                    clearInterval(cacheInfo.timer);
+                }
+                tempFileCache.delete(articleId);
+                console.log(`[Cache] Synced and removed old system temp file: ${oldSystemTempPath}`);
+                return true;
+            }
+        } catch (err) {
+            // 忽略兼容性检查错误
+        }
+        
         return false;
     } catch (error) {
         console.error(`[Cache] Failed to sync temp file for ${articleId}:`, error);
@@ -152,14 +239,15 @@ function startTempCacheTimer(articleId, filePath, getContent) {
     }
     
     // 保存缓存信息（定时器由前端管理，这里只记录信息）
+    const tempPath = getTempFilePath(filePath);
     tempFileCache.set(articleId, {
-        tempPath: filePath + TEMP_FILE_SUFFIX,
+        tempPath: tempPath,
         lastSaveTime: Date.now(),
         timer: null, // 定时器由前端管理，这里不创建
         filePath: filePath
     });
     
-    console.log(`[Cache] Registered cache for article: ${articleId}, filePath: ${filePath}`);
+    console.log(`[Cache] Registered cache for article: ${articleId}, tempPath: ${tempPath}`);
 }
 
 /**
@@ -179,20 +267,142 @@ function stopTempCacheTimer(articleId) {
 
 /**
  * 清理所有临时文件（应用退出时调用）
+ * 会先同步所有临时文件到正式文件，然后删除临时文件
  */
 async function cleanupAllTempFiles() {
     try {
+        console.log('[Cache] Starting cleanup of all temp files...');
+        const syncPromises = [];
+        
+        // 先同步所有临时文件到正式文件
         for (const [articleId, cacheInfo] of tempFileCache.entries()) {
             if (cacheInfo.timer) {
                 clearInterval(cacheInfo.timer);
             }
-            // 注意：这里不删除临时文件，因为可能还有未保存的内容
-            // 临时文件会在下次加载时自动同步
+            
+            // 如果有临时文件，尝试同步到正式文件
+            if (cacheInfo.filePath && cacheInfo.tempPath) {
+                syncPromises.push(
+                    syncTempToFile(articleId, cacheInfo.filePath).catch(err => {
+                        console.error(`[Cache] Failed to sync temp file for ${articleId}:`, err);
+                    })
+                );
+            }
         }
+        
+        // 等待所有同步操作完成
+        await Promise.all(syncPromises);
+        
+        // 清理所有缓存记录
         tempFileCache.clear();
-        console.log('[Cache] Cleaned up all temp cache timers');
+        
+        // 清理安装目录下的 tmp 目录中所有遗留的临时文件（防止有未记录的临时文件）
+        try {
+            if (await fs.pathExists(TEMP_DIR)) {
+                const files = await fs.readdir(TEMP_DIR);
+                for (const file of files) {
+                    if (file.endsWith(TEMP_FILE_SUFFIX)) {
+                        const filePath = path.join(TEMP_DIR, file);
+                        try {
+                            await fs.remove(filePath);
+                            console.log(`[Cache] Removed orphaned temp file: ${filePath}`);
+                        } catch (err) {
+                            console.error(`[Cache] Failed to remove orphaned temp file ${filePath}:`, err);
+                        }
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('[Cache] Failed to cleanup orphaned temp files:', err);
+        }
+        
+        // 清理文档目录中可能遗留的旧格式临时文件（兼容旧版本）
+        try {
+            const docsDir = paths.docs;
+            if (await fs.pathExists(docsDir)) {
+                const files = await fs.readdir(docsDir);
+                for (const file of files) {
+                    if (file.endsWith(TEMP_FILE_SUFFIX)) {
+                        const filePath = path.join(docsDir, file);
+                        try {
+                            await fs.remove(filePath);
+                            console.log(`[Cache] Removed old format temp file: ${filePath}`);
+                        } catch (err) {
+                            console.error(`[Cache] Failed to remove old temp file ${filePath}:`, err);
+                        }
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('[Cache] Failed to cleanup old format temp files:', err);
+        }
+        
+        // 清理系统临时目录中可能遗留的旧版本临时文件（兼容旧版本）
+        try {
+            const os = require('os');
+            const systemTempDir = path.join(os.tmpdir(), 'ymhut-write-cache');
+            if (await fs.pathExists(systemTempDir)) {
+                const files = await fs.readdir(systemTempDir);
+                for (const file of files) {
+                    if (file.endsWith(TEMP_FILE_SUFFIX)) {
+                        const filePath = path.join(systemTempDir, file);
+                        try {
+                            await fs.remove(filePath);
+                            console.log(`[Cache] Removed old system temp file: ${filePath}`);
+                        } catch (err) {
+                            console.error(`[Cache] Failed to remove old system temp file ${filePath}:`, err);
+                        }
+                    }
+                }
+                // 如果目录为空，尝试删除目录
+                try {
+                    const remainingFiles = await fs.readdir(systemTempDir);
+                    if (remainingFiles.length === 0) {
+                        await fs.remove(systemTempDir);
+                        console.log(`[Cache] Removed empty old system temp directory: ${systemTempDir}`);
+                    }
+                } catch (err) {
+                    // 忽略删除目录的错误
+                }
+            }
+        } catch (err) {
+            console.error('[Cache] Failed to cleanup old system temp files:', err);
+        }
+        
+        console.log('[Cache] Cleaned up all temp files and cache timers');
     } catch (error) {
         console.error('[Cache] Failed to cleanup temp files:', error);
+    }
+}
+
+/**
+ * 清理 tmp 目录中的所有临时文件（应用启动时调用）
+ * 用于清理上次异常退出时遗留的临时文件
+ */
+async function cleanupTempDirOnStartup() {
+    try {
+        console.log('[Cache] Cleaning up temp directory on startup...');
+        if (await fs.pathExists(TEMP_DIR)) {
+            const files = await fs.readdir(TEMP_DIR);
+            let cleanedCount = 0;
+            for (const file of files) {
+                if (file.endsWith(TEMP_FILE_SUFFIX)) {
+                    const filePath = path.join(TEMP_DIR, file);
+                    try {
+                        await fs.remove(filePath);
+                        cleanedCount++;
+                        console.log(`[Cache] Removed startup temp file: ${filePath}`);
+                    } catch (err) {
+                        console.error(`[Cache] Failed to remove startup temp file ${filePath}:`, err);
+                    }
+                }
+            }
+            if (cleanedCount > 0) {
+                console.log(`[Cache] Cleaned up ${cleanedCount} temp files on startup`);
+            }
+        }
+    } catch (error) {
+        console.error('[Cache] Failed to cleanup temp directory on startup:', error);
     }
 }
 
@@ -203,5 +413,7 @@ module.exports = {
     syncTempToFile,
     startTempCacheTimer,
     stopTempCacheTimer,
-    cleanupAllTempFiles
+    cleanupAllTempFiles,
+    cleanupTempDirOnStartup, // 启动时清理
+    getTempFilePath // 导出以便其他地方使用
 };

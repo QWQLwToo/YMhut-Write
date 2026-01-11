@@ -63,9 +63,9 @@ export function useI18n() {
    */
   const getAvailableLocales = () => {
     return [
-      { code: 'zh-CN', name: '简体中文', nativeName: '简体中文' },
-      { code: 'zh-TW', name: '繁体中文', nativeName: '繁體中文' },
-      { code: 'en-US', name: 'English', nativeName: 'English' }
+      { code: 'zh-CN', name: '简体中文', nativeName: '简体中文', flag: '🇨🇳' },
+      { code: 'zh-TW', name: '繁体中文', nativeName: '繁體中文', flag: '🇹🇼' },
+      { code: 'en-US', name: 'English', nativeName: 'English', flag: '🇺🇸' }
     ];
   };
   

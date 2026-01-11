@@ -23,17 +23,17 @@
       <div class="px-4 mb-4 flex items-center justify-between">
         <div class="bg-gray-100/80 dark:bg-gray-900/80 p-1 rounded-lg flex w-full transition-colors">
           <button @click="sidebarTab = 'docs'" class="flex-1 text-[11px] font-bold py-1 rounded-md transition-all flex items-center justify-center gap-1.5" :class="sidebarTab === 'docs' ? 'bg-white dark:bg-black text-black dark:text-white shadow-sm' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'">
-            <ph-files :size="14" weight="bold"/> 文稿库
+            <ph-files :size="14" weight="bold"/> {{ t.workspace.sidebar.documents }}
           </button>
           <button @click="switchSidebarToHistory" class="flex-1 text-[11px] font-bold py-1 rounded-md transition-all flex items-center justify-center gap-1.5" :class="sidebarTab === 'history' ? 'bg-white dark:bg-black text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'">
-            <ph-clock-counter-clockwise :size="14" weight="bold"/> 历史存档
+            <ph-clock-counter-clockwise :size="14" weight="bold"/> {{ t.workspace.sidebar.history }}
           </button>
         </div>
       </div>
 
       <div v-if="sidebarTab === 'docs'" class="flex-1 flex flex-col overflow-hidden">
         <div class="px-5 mb-2 flex items-center justify-between group">
-          <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest transition-colors">所有文稿</span>
+          <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest transition-colors">{{ t.workspace.sidebar.allDocuments }}</span>
           <button @click="refreshList" class="text-gray-400 dark:text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition p-1 rounded-md hover:bg-gray-200/50 dark:hover:bg-gray-900/50"><ph-arrows-clockwise :size="12" /></button>
         </div>
         
@@ -71,10 +71,10 @@
               <div :class="currentArticle?.id === item.id 
                 ? 'text-[13px] font-bold text-indigo-900 dark:text-indigo-200 flex-1 leading-tight min-w-0' 
                 : 'text-[13px] font-bold text-gray-700 dark:text-gray-300 flex-1 leading-tight min-w-0 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors'"
-                :title="item.title || '无标题文档'"
+                :title="item.title || t.workspace.sidebar.noTitle"
                 style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-break: break-word;"
               >
-                {{ item.title || '无标题文档' }}
+                {{ item.title || t.workspace.sidebar.noTitle }}
               </div>
             </div>
             <div class="text-[10px] pl-8 flex justify-between transition-colors" :class="currentArticle?.id === item.id ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-500'">
@@ -87,7 +87,7 @@
         <div class="px-4 mt-2 pt-3 border-t border-gray-100 dark:border-gray-800 transition-colors space-y-2">
            <button @click="createNew" class="group w-full py-2.5 bg-black/80 dark:bg-white/10 backdrop-blur-md text-white rounded-xl text-xs font-bold hover:bg-black/90 dark:hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 border border-white/10 dark:border-white/10 hover:border-white/20 dark:hover:border-white/20">
             <ph-plus :size="14" weight="bold" class="transition-transform duration-300 group-hover:rotate-90" /> 
-            <span class="transition-all duration-300">新建文档</span>
+            <span class="transition-all duration-300">{{ t.workspace.sidebar.newDocument }}</span>
           </button>
           <button @click="openExternalFile" class="group w-full py-2.5 bg-gray-100/80 dark:bg-gray-900/80 backdrop-blur-md text-gray-700 dark:text-gray-300 rounded-xl text-xs font-bold hover:bg-gray-200 dark:hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 border border-gray-200/60 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform duration-300 group-hover:scale-110">
@@ -95,19 +95,19 @@
               <polyline points="17 8 12 3 7 8"/>
               <line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
-            <span class="transition-all duration-300">打开文件</span>
+            <span class="transition-all duration-300">{{ t.workspace.sidebar.openFile }}</span>
           </button>
         </div>
       </div>
 
       <div v-else class="flex-1 flex flex-col overflow-hidden animate-fade-in">
         <div class="px-5 mb-3 flex items-center justify-between">
-          <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest transition-colors">{{ currentArticle ? currentArticle.title : '未选择文档' }}</span>
+          <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest transition-colors">{{ currentArticle ? currentArticle.title : t.workspace.sidebar.noDocumentSelected }}</span>
           <button 
             v-if="currentArticle" 
             @click="loadSnapshots" 
             class="text-gray-400 dark:text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
-            title="刷新历史记录"
+            :title="t.workspace.sidebar.refreshHistory"
           >
             <ph-arrows-clockwise :size="12" />
           </button>
@@ -115,8 +115,8 @@
         <div v-if="currentArticle" class="flex-1 overflow-y-auto px-3 space-y-2 custom-scrollbar">
            <div v-if="snapshots.length === 0" class="text-center mt-10">
              <ph-clock-counter-clockwise :size="32" class="text-gray-300 dark:text-gray-700 mx-auto mb-2 transition-colors" />
-             <p class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">暂无历史备份</p>
-             <p class="text-[9px] text-gray-300 dark:text-gray-600 mt-1 transition-colors">文档保存时会自动创建备份</p>
+             <p class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.workspace.sidebar.noHistoryBackup }}</p>
+             <p class="text-[9px] text-gray-300 dark:text-gray-600 mt-1 transition-colors">{{ t.workspace.sidebar.autoBackup }}</p>
            </div>
            <div v-for="snap in snapshots" :key="snap.id" class="bg-white dark:bg-gray-900 p-3 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm group hover:border-indigo-200 dark:hover:border-indigo-800 transition-all cursor-pointer" @click="previewSnapshot(snap)">
               <div class="flex justify-between items-center mb-2">
@@ -141,7 +141,7 @@
         </div>
         <div v-else class="flex-1 flex flex-col items-center justify-center text-gray-300 dark:text-gray-600">
           <ph-file-dashed :size="32" class="mb-2 opacity-50"/>
-          <p class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">请先在文稿库选择一个文件</p>
+          <p class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.workspace.sidebar.selectFileFirst }}</p>
         </div>
       </div>
 
@@ -158,7 +158,7 @@
                   v-model="currentArticle.title" 
                   class="text-3xl font-bold bg-transparent border-none outline-none w-full text-gray-900 dark:text-white tracking-tight leading-tight transition-colors placeholder:text-gray-400 dark:placeholder:text-gray-600" 
                   :style="{ fontFamily: userStyle.fontFamily }" 
-                  placeholder="文档标题" 
+                  :placeholder="t.workspace.editor.placeholder" 
                   @input="handleInput"
                >
             </div>
@@ -431,7 +431,7 @@
                             <line x1="3" y1="4" x2="21" y2="20"/>
                         </svg>
                     </button>
-                    <button @click="formatText('wordCount')" class="toolbar-btn-simple group" title="字数统计">
+                    <button @click="formatText('wordCount')" class="toolbar-btn-simple group" :title="t.workspace.wordStats.title">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-600 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                             <polyline points="14 2 14 8 20 8"/>
@@ -502,7 +502,7 @@
                                 @mousedown="handleEditorMouseDown('md')"
                                 @click="handleEditorClick('md')"
                                 @contextmenu.prevent="showEditorContextMenu($event, 'md')"
-                                placeholder="在此处开始你的创作..."
+                                :placeholder="t.workspace.editor.startWriting"
                                 class="w-full h-full border-none outline-none resize-none bg-transparent text-gray-700 dark:text-gray-200 transition-colors placeholder:text-gray-400 dark:placeholder:text-gray-600 font-mono text-sm"
                                 :class="userStyle.showLineNumbers ? 'pl-16 pr-6 py-6' : 'p-6'"
                                 :style="{ 
@@ -578,7 +578,7 @@
                             @mousedown="handleEditorMouseDown('text')"
                             @click="handleEditorClick('text')"
                             @contextmenu.prevent="showEditorContextMenu($event, 'text')"
-                            data-placeholder="在此处开始你的创作..."
+                            :data-placeholder="t.workspace.editor.startWriting"
                             class="w-full h-full border-none outline-none resize-none bg-transparent text-gray-700 dark:text-gray-200 transition-colors overflow-y-auto custom-scrollbar rich-text-editor"
                             :class="userStyle.showLineNumbers ? 'pl-16 pr-6 py-6' : 'p-6'"
                             :style="{ 
@@ -605,7 +605,7 @@
 
         <div v-else class="flex-1 flex flex-col items-center justify-center text-gray-300 dark:text-gray-600 select-none bg-gray-50/30 dark:bg-black/30 transition-colors">
             <ph-pencil-slash :size="48" class="text-gray-200 dark:text-gray-800 mb-4 transition-colors" />
-            <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest transition-colors">请选择或创建文档</p>
+            <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest transition-colors">{{ t.workspace.sidebar.selectOrCreate }}</p>
         </div>
     </div>
 
@@ -614,10 +614,10 @@
          :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
          @click.stop>
         <button @click="openRenameModal" class="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-black dark:hover:text-white flex items-center gap-2 transition-colors">
-            <ph-pencil-simple :size="14" /> 重命名
+            <ph-pencil-simple :size="14" /> {{ t.workspace.contextMenu.rename }}
         </button>
         <button @click="openConvertModalFromMenu" class="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-black dark:hover:text-white flex items-center gap-2 transition-colors">
-            <ph-swap :size="14" /> 格式转换
+            <ph-swap :size="14" /> {{ t.workspace.contextMenu.convert }}
         </button>
         <div class="h-px bg-gray-100 dark:bg-gray-800 my-1"></div>
         <button @click="openExportModal" class="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-black dark:hover:text-white flex items-center gap-2 transition-colors">
@@ -626,11 +626,11 @@
                 <polyline points="7 10 12 15 17 10"/>
                 <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            导出为...
+            {{ t.workspace.export.title }}
         </button>
         <div class="h-px bg-gray-100 dark:bg-gray-800 my-1"></div>
         <button @click="deleteFromMenu" class="w-full text-left px-4 py-2 text-xs font-bold text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors">
-            <ph-trash :size="14" /> 删除
+            <ph-trash :size="14" /> {{ t.workspace.contextMenu.delete }}
         </button>
     </div>
 
@@ -680,11 +680,11 @@
     <transition name="modal">
     <div v-if="showRenameModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/20 backdrop-blur-sm">
         <div class="bg-white dark:bg-black w-[300px] p-5 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 transition-all duration-300">
-            <h3 class="font-bold text-gray-800 mb-4 text-sm">重命名文档</h3>
-            <input v-model="renameTempTitle" @keyup.enter="confirmRename" class="w-full bg-gray-100 border-none rounded-lg px-3 py-2 text-sm outline-none mb-4 focus:ring-2 ring-indigo-500/20" placeholder="输入新名称" autofocus>
+            <h3 class="font-bold text-gray-800 mb-4 text-sm">{{ t.workspace.convert.renameTitle }}</h3>
+            <input v-model="renameTempTitle" @keyup.enter="confirmRename" class="w-full bg-gray-100 border-none rounded-lg px-3 py-2 text-sm outline-none mb-4 focus:ring-2 ring-indigo-500/20" :placeholder="t.messages.inputNewName" autofocus>
             <div class="flex gap-2">
-                <button @click="showRenameModal = false" class="flex-1 py-2 text-gray-500 hover:bg-gray-100 rounded-lg text-xs font-bold">取消</button>
-                <button @click="confirmRename" class="flex-1 py-2 bg-[#1d1d1f] text-white rounded-lg text-xs font-bold hover:opacity-90">确定</button>
+                <button @click="showRenameModal = false" class="flex-1 py-2 text-gray-500 hover:bg-gray-100 rounded-lg text-xs font-bold">{{ t.common.cancel }}</button>
+                <button @click="confirmRename" class="flex-1 py-2 bg-[#1d1d1f] text-white rounded-lg text-xs font-bold hover:opacity-90">{{ t.common.confirm }}</button>
             </div>
         </div>
     </div>
@@ -694,22 +694,22 @@
     <transition name="modal">
     <div v-if="showCreateModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/20 backdrop-blur-sm" @click.self="showCreateModal = false">
         <div class="bg-white dark:bg-black w-[420px] p-6 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 transition-all duration-300">
-            <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2"><ph-file-plus :size="20" weight="bold"/> 新建文档</h3>
+            <h3 class="font-bold text-gray-800 mb-6 flex items-center gap-2"><ph-file-plus :size="20" weight="bold"/> {{ t.workspace.sidebar.newDocument }}</h3>
             
             <div class="mb-5">
-                <label class="block text-xs font-bold text-gray-600 mb-2">文档名称</label>
+                <label class="block text-xs font-bold text-gray-600 mb-2">{{ t.workspace.createModal.documentName }}</label>
                 <input 
                     v-model="newDocTitle" 
                     @keyup.enter="confirmCreate"
                     class="w-full bg-gray-100 border-none rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 ring-indigo-500/20" 
-                    placeholder="输入文档名称（可选）"
+                    :placeholder="t.workspace.createModal.documentNamePlaceholder"
                     autofocus
                 >
-                <p class="text-[10px] text-gray-400 mt-1.5">留空将使用默认名称</p>
+                <p class="text-[10px] text-gray-400 mt-1.5">{{ t.workspace.createModal.defaultNameHint }}</p>
             </div>
 
             <div class="mb-6">
-                <label class="block text-xs font-bold text-gray-600 mb-3">文档格式</label>
+                <label class="block text-xs font-bold text-gray-600 mb-3">{{ t.workspace.createModal.documentFormat }}</label>
                 <div class="grid grid-cols-2 gap-3">
                     <button 
                         @click="newDocFormat = 'md'"
@@ -729,14 +729,14 @@
                             : 'border-gray-200 hover:border-indigo-300 text-gray-700'"
                     >
                         <ph-text-t :size="24" />
-                        <span>纯文本</span>
+                        <span>{{ t.workspace.createModal.plainText }}</span>
                     </button>
                 </div>
             </div>
 
             <div class="flex gap-2">
-                <button @click="showCreateModal = false" class="flex-1 py-2.5 text-gray-500 hover:bg-gray-100 rounded-lg text-xs font-bold transition">取消</button>
-                <button @click="confirmCreate" class="flex-1 py-2.5 bg-[#1d1d1f] text-white rounded-lg text-xs font-bold hover:opacity-90 transition">创建</button>
+                <button @click="showCreateModal = false" class="flex-1 py-2.5 text-gray-500 hover:bg-gray-100 rounded-lg text-xs font-bold transition">{{ t.common.cancel }}</button>
+                <button @click="confirmCreate" class="flex-1 py-2.5 bg-[#1d1d1f] text-white rounded-lg text-xs font-bold hover:opacity-90 transition">{{ t.workspace.sidebar.newDocument }}</button>
             </div>
         </div>
     </div>
@@ -748,7 +748,7 @@
         <div class="bg-white dark:bg-black rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 w-[500px] max-w-[90vw] transition-all duration-300">
           <div class="p-6 border-b border-gray-200 dark:border-gray-800">
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white">字数统计</h3>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ t.workspace.wordStats.title }}</h3>
               <button @click="showWordStats = false" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-200">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -759,44 +759,44 @@
           <div class="p-6 space-y-4">
             <div class="grid grid-cols-2 gap-4">
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">字符数（含空格）</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.chars }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.chars }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">字符数（不含空格）</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.charsNoSpaces }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.charsNoSpaces }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">总字数</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.words }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.words }}</div>
-                <div class="text-[10px] text-gray-400 dark:text-gray-500 mt-1">中文+英文单词</div>
+                <div class="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{{ t.workspace.wordStats.wordsDesc }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">中文字符</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.chineseChars }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.chineseChars }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">中文标点</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.chinesePunctuation }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.chinesePunctuation }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">英文单词</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.englishWords }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.englishWords }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">数字</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.numbers }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.numbers }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">段落数</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.paragraphs }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.paragraphs }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">行数</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.lines }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.lines }}</div>
               </div>
               <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 transition-all duration-200 hover:shadow-md">
-                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">句子数</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t.workspace.wordStats.sentences }}</div>
                 <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ wordStatsComputed.sentences }}</div>
               </div>
             </div>
@@ -813,8 +813,8 @@
     <transition name="modal">
     <div v-if="showConvertModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/20 dark:bg-black/60 backdrop-blur-sm" @click.self="showConvertModal = false">
          <div class="bg-white dark:bg-black w-[400px] p-6 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 transition-colors duration-300">
-            <h3 class="font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2 transition-colors"><ph-swap :size="20"/> 格式转换</h3>
-            <p v-if="currentArticle" class="text-xs text-gray-500 dark:text-gray-400 mb-4 transition-colors">当前格式: <span class="font-bold text-indigo-600 dark:text-indigo-400">{{ currentArticle.format.toUpperCase() }}</span></p>
+            <h3 class="font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2 transition-colors"><ph-swap :size="20"/> {{ t.workspace.convert.title }}</h3>
+            <p v-if="currentArticle" class="text-xs text-gray-500 dark:text-gray-400 mb-4 transition-colors">{{ t.workspace.convert.currentFormat }}: <span class="font-bold text-indigo-600 dark:text-indigo-400">{{ currentArticle.format.toUpperCase() }}</span></p>
             <div class="grid grid-cols-3 gap-3 mb-6">
                 <button 
                     v-for="fmt in ['md', 'txt', 'json']" 
@@ -827,7 +827,7 @@
                         : 'border-gray-200 dark:border-gray-800 hover:border-indigo-500 dark:hover:border-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-700 dark:hover:text-indigo-400 text-gray-700 dark:text-gray-300'"
                 >{{ fmt }}</button>
             </div>
-            <button @click="showConvertModal = false" class="w-full py-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-xs font-bold transition-colors">取消</button>
+            <button @click="showConvertModal = false" class="w-full py-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-xs font-bold transition-colors">{{ t.common.cancel }}</button>
         </div>
     </div>
     </transition>
@@ -842,11 +842,11 @@
                         <polyline points="7 10 12 15 17 10"/>
                         <line x1="12" y1="15" x2="12" y2="3"/>
                     </svg>
-                    导出文档
+                    {{ t.workspace.export.title }}
                 </h3>
                 
                 <div class="mb-6">
-                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-3 transition-colors">选择导出格式</label>
+                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-3 transition-colors">{{ t.workspace.export.selectFormat }}</label>
                     <div class="grid grid-cols-3 gap-3">
                         <button
                             @click="selectedExportFormat = 'txt'"
@@ -862,7 +862,7 @@
                                 </svg>
                                 <span class="text-sm font-bold text-gray-800 dark:text-white">TXT</span>
                             </div>
-                            <p class="text-[10px] text-gray-500 dark:text-gray-400">纯文本格式</p>
+                            <p class="text-[10px] text-gray-500 dark:text-gray-400">{{ t.workspace.createModal.plainTextFormat }}</p>
                         </button>
                         
                         <button
@@ -923,7 +923,7 @@
                             <line x1="12" y1="16" x2="12.01" y2="16"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-800 dark:text-white transition-colors">{{ confirmDialog.title || '确认操作' }}</h3>
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white transition-colors">{{ confirmDialog.title || t.common.confirm }}</h3>
                 </div>
                 
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 transition-colors">{{ confirmDialog.message }}</p>
@@ -950,7 +950,7 @@
                         @click="handleConfirmOk" 
                         class="flex-1 py-2.5 bg-red-600 dark:bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-700 dark:hover:bg-red-400 transition"
                     >
-                        {{ confirmDialog.okText || '确定' }}
+                        {{ confirmDialog.okText || t.common.confirm }}
                     </button>
                 </div>
             </div>
@@ -969,7 +969,7 @@
                             <line x1="12" y1="8" x2="12.01" y2="8"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-800 dark:text-white transition-colors">{{ alertDialog.title || '提示' }}</h3>
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-white transition-colors">{{ alertDialog.title || t.common.confirm }}</h3>
                 </div>
                 
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 transition-colors">{{ alertDialog.message }}</p>
@@ -979,7 +979,7 @@
                         @click="alertDialog.visible = false" 
                         class="px-6 py-2.5 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 dark:hover:bg-indigo-400 transition"
                     >
-                        确定
+                        {{ t.common.confirm }}
                     </button>
                 </div>
             </div>
@@ -995,8 +995,12 @@ import DynamicIsland from '../components/DynamicIsland.vue';
 import Icon from '../components/Icon.vue';
 import { useTheme } from '../composables/useTheme';
 import { useWordCount } from '../composables/useWordCount';
+import { useI18n } from '../composables/useI18n';
 import dayjs from 'dayjs';
 import MarkdownIt from 'markdown-it';
+
+// 初始化国际化 - 必须在所有使用 t 的地方之前
+const { t } = useI18n();
 
 // 初始化Markdown渲染器
 const mdRenderer = new MarkdownIt({
@@ -1113,7 +1117,7 @@ const confirmDialog = reactive({
     visible: false,
     title: '',
     message: '',
-    okText: '确定',
+    okText: '',
     showCheckbox: false,
     checkboxLabel: '',
     checkboxChecked: false,
@@ -1131,9 +1135,10 @@ const alertDialog = reactive({
 // 显示确认对话框
 const showConfirm = (options) => {
     return new Promise((resolve) => {
-        confirmDialog.title = options.title || '确认操作';
+        const defaultConfirm = t.value?.common?.confirm || '确认';
+        confirmDialog.title = options.title || defaultConfirm;
         confirmDialog.message = options.message || '';
-        confirmDialog.okText = options.okText || '确定';
+        confirmDialog.okText = options.okText || defaultConfirm;
         confirmDialog.showCheckbox = options.showCheckbox || false;
         confirmDialog.checkboxLabel = options.checkboxLabel || '';
         confirmDialog.checkboxChecked = options.checkboxChecked !== undefined ? options.checkboxChecked : false;
@@ -1150,9 +1155,9 @@ const showConfirm = (options) => {
 };
 
 // 显示提示框
-const showAlert = (message, title = '提示') => {
+const showAlert = (message, title = null) => {
     return new Promise((resolve) => {
-        alertDialog.title = title;
+        alertDialog.title = title || (t.value?.common?.confirm || '确认');
         alertDialog.message = message;
         alertDialog.visible = true;
         // 监听关闭事件
@@ -1306,11 +1311,11 @@ const deleteFromMenu = async () => {
     closeContextMenu();
     
     const result = await showConfirm({
-        title: '删除文档',
-        message: `确定要删除 "${deleteTargetItem.value.title}" 吗？此操作无法撤销。`,
-        okText: '删除',
+        title: t.workspace.delete.title,
+        message: `${t.workspace.delete.message.replace('此文档', `"${deleteTargetItem.value.title}"`)}`,
+        okText: t.common.delete,
         showCheckbox: true,
-        checkboxLabel: '同时删除文件',
+        checkboxLabel: t.workspace.delete.deleteFile,
         checkboxChecked: true
     });
     
@@ -1363,12 +1368,12 @@ const confirmExport = async () => {
                 if (appStatus.value === '已导出') appStatus.value = 'Ready';
             }, 2000);
         } else if (!result.canceled) {
-            await showAlert('导出失败: ' + (result.error || '未知错误'), '导出失败');
+            await showAlert(t.value.messages.exportFailed + ': ' + (result.error || t.value.messages.unknownError), t.value.messages.exportFailed);
         }
         exportTargetItem.value = null; // 清理
     } catch (e) {
         console.error('Export error:', e);
-        await showAlert('导出失败: ' + (e.message || '未知错误'), '导出失败');
+        await showAlert(t.value.messages.exportFailed + ': ' + (e.message || t.value.messages.unknownError), t.value.messages.exportFailed);
         exportTargetItem.value = null; // 清理
     }
 };
@@ -1442,11 +1447,11 @@ const openExternalFile = async () => {
         }, 2000);
       }
     } else if (!result.canceled) {
-      await showAlert('打开文件失败: ' + (result.error || '未知错误'), '打开失败');
+      await showAlert(t.value.messages.openFileFailed + ': ' + (result.error || t.value.messages.unknownError), t.value.messages.openFailed);
     }
   } catch (e) {
     console.error('Open external file error:', e);
-    await showAlert('打开文件失败: ' + (e.message || '未知错误'), '打开失败');
+    await showAlert(t.value.messages.openFileFailed + ': ' + (e.message || t.value.messages.unknownError), t.value.messages.openFailed);
   }
 };
 
@@ -1470,7 +1475,7 @@ const confirmCreate = async () => {
     const created = articles.value.find(a => a.id === newArt.id);
     if (created) await loadArticle(created);
   } catch(e) {
-    await showAlert('创建文档失败: ' + (e.message || '未知错误'), '创建失败');
+    await showAlert(t.value.messages.createFailed + ': ' + (e.message || t.value.messages.unknownError), t.value.messages.createFailed);
   }
 };
 // MD输入处理
@@ -2325,7 +2330,7 @@ const insertMD = insertText;
 const convertFormat = async (targetFormat) => {
     if (!currentArticle.value) return;
     if (currentArticle.value.format === targetFormat) {
-        await showAlert('格式相同，无需转换', '格式转换');
+        await showAlert(t.value.messages.sameFormat, t.value.workspace.convert.title);
         showConvertModal.value = false;
         return;
     }
@@ -2344,13 +2349,13 @@ const convertFormat = async (targetFormat) => {
         const newArticle = articles.value.find(a => a.id === res.newId);
         if (newArticle) {
             await loadArticle(newArticle);
-            await showAlert('格式转换成功！已另存为新文档。', '转换成功');
+            await showAlert(t.messages.convertSuccess, t.messages.convertSuccess);
         } else {
-            await showAlert('转换成功，但未找到新文档。请刷新列表查看。', '转换成功');
+            await showAlert(t.messages.convertSuccessRefresh, t.messages.convertSuccess);
             await refreshList();
         }
     } else {
-        await showAlert('转换失败: ' + (res?.error || '未知错误'), '转换失败');
+        await showAlert(t.value.messages.convertFailed + ': ' + (res?.error || t.value.messages.unknownError), t.value.messages.convertFailed);
     }
 };
 const previewSnapshot = (snap) => {
@@ -2361,9 +2366,9 @@ const restore = async (snap) => {
   if (!currentArticle.value) return;
   
   const result = await showConfirm({
-    title: '恢复历史版本',
-    message: `确定要恢复到 ${formatTime(snap.snapshot_time)} 的版本吗？\n当前内容将被覆盖。`,
-    okText: '恢复'
+    title: t.value.messages.restoreTitle,
+    message: t.value.messages.restoreVersion.replace('{time}', formatTime(snap.snapshot_time)),
+    okText: t.value.messages.restoreSuccess
   });
   
   if (result.confirmed) {
@@ -2390,7 +2395,7 @@ const restore = async (snap) => {
 };
 const openConvertModal = async () => { 
     if(!currentArticle.value) {
-        await showAlert('请先选择一个文档', '提示');
+        await showAlert(t.value.messages.selectDocumentFirst);
         return;
     }
     showConvertModal.value = true; 
@@ -2415,7 +2420,11 @@ const openConvertModalFromMenu = () => {
 };
 // 字数统计已移至 useWordCount composable
 const formatTime = (t) => dayjs(t).format('MM/DD HH:mm');
-const statusText = computed(() => appStatus.value === 'Saved' ? '已保存' : (appStatus.value === 'Writing' ? '同步中...' : '就绪'));
+const statusText = computed(() => {
+  if (appStatus.value === 'Saved') return t.value.workspace.editor.status.saved;
+  if (appStatus.value === 'Writing') return t.value.workspace.editor.status.writing;
+  return t.value.workspace.editor.status.ready;
+});
 const statusIndicator = computed(() => {
     switch(appStatus.value) {
         case 'Saved': return 'bg-green-500 shadow-green-500/50';

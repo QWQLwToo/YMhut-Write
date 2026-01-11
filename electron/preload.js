@@ -63,4 +63,7 @@ contextBridge.exposeInMainWorld('api', {
     onWindowResizingEnd: (callback) => ipcRenderer.on('window-resizing-end', () => callback()),
     onWindowMaximized: (callback) => ipcRenderer.on('window-maximized', () => callback()),
     onWindowUnmaximized: (callback) => ipcRenderer.on('window-unmaximized', () => callback()),
+    
+    // 语言变化事件
+    onLanguageChanged: (callback) => ipcRenderer.on('language-changed', (event, locale) => callback(locale)),
 });

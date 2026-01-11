@@ -6,9 +6,9 @@
         <div class="w-6 h-6 bg-white dark:bg-black rounded-full shadow-sm flex items-center justify-center text-gray-600 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white transition-colors">
           <Icon name="arrow-left" :size="14" color="currentColor" />
         </div>
-        <span class="text-xs font-bold text-gray-600 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white transition-colors">返回主页</span>
+        <span class="text-xs font-bold text-gray-600 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white transition-colors">{{ t.common.close }}</span>
       </button>
-      <div class="font-bold text-base text-gray-800 dark:text-white tracking-wide transition-colors">偏好设置</div>
+      <div class="font-bold text-base text-gray-800 dark:text-white tracking-wide transition-colors">{{ t.common.settings }}</div>
       <div class="w-24"></div> 
     </div>
 
@@ -52,11 +52,11 @@
           <!-- 外观设置 -->
           <div v-if="activeTab === 'appearance'" class="space-y-6">
             <div>
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">外观</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">{{ t.settings.theme.title }}</h2>
               
               <div class="bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden transition-colors duration-300">
                 <div class="p-6">
-                  <div class="text-sm font-bold text-gray-800 dark:text-white mb-4 transition-colors">主题模式</div>
+                  <div class="text-sm font-bold text-gray-800 dark:text-white mb-4 transition-colors">{{ t.settings.theme.themeMode }}</div>
                   <div class="grid grid-cols-2 gap-4">
                     <button 
                       @click="switchTheme('light')"
@@ -79,7 +79,7 @@
                             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                           </svg>
                         </div>
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors">浅色模式</span>
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors">{{ t.settings.theme.light }}</span>
                       </div>
                       <div v-if="settings.theme === 'light'" class="absolute top-3 right-3 w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
@@ -101,7 +101,7 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                           </svg>
                         </div>
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors">深色模式</span>
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors">{{ t.settings.theme.dark }}</span>
                       </div>
                       <div v-if="settings.theme === 'dark'" class="absolute top-3 right-3 w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
@@ -118,7 +118,7 @@
           <!-- 编辑器设置 -->
           <div v-if="activeTab === 'editor'" class="space-y-6">
             <div>
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">编辑器</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">{{ t.settings.editor.markdown }}</h2>
               
               <div class="bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden divide-y divide-gray-50 dark:divide-gray-900 transition-colors duration-300">
                 <!-- Markdown编辑器设置 -->
@@ -128,7 +128,7 @@
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                       <polyline points="14 2 14 8 20 8"/>
                     </svg>
-                    Markdown 编辑器
+                    {{ t.settings.editor.markdown }}
                   </div>
                   
                   <div class="space-y-3">
@@ -138,8 +138,8 @@
                           <Icon name="code" :size="16" color="#6366f1" />
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">显示 Markdown 源码</div>
-                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">关闭后将显示渲染后的预览效果</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.editor.showRawMd }}</div>
+                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.editor.showRawMdDesc }}</div>
                         </div>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
@@ -158,8 +158,8 @@
                           </svg>
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">打字机模式</div>
-                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">始终将当前行保持在屏幕中央</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.editor.typewriterMode }}</div>
+                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.editor.typewriterModeDesc }}</div>
                         </div>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
@@ -178,8 +178,8 @@
                           </svg>
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">专注模式</div>
-                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">淡化其他内容，突出当前段落</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.editor.focusMode }}</div>
+                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.editor.focusModeDesc }}</div>
                         </div>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
@@ -198,8 +198,8 @@
                           </svg>
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">源代码模式</div>
-                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">仅显示源代码，隐藏预览</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.editor.sourceMode }}</div>
+                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.editor.sourceModeDesc }}</div>
                         </div>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
@@ -213,17 +213,53 @@
                 <div class="p-5">
                   <div class="text-sm font-bold text-gray-800 dark:text-white mb-4 transition-colors flex items-center gap-2">
                     <Icon name="font" :size="16" color="currentColor" />
-                    通用设置
+                    {{ t.settings.general.title || '通用设置' }}
                   </div>
                   
                   <div class="space-y-3">
+                    <!-- 语言选择 -->
+                    <div class="flex items-center justify-between group hover:bg-gray-50/50 dark:hover:bg-gray-900/50 p-3 rounded-lg transition-colors">
+                      <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-600 dark:text-gray-400">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.general.language }}</div>
+                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.general.languageDesc }}</div>
+                        </div>
+                      </div>
+                      <div class="relative">
+                        <select 
+                          v-model="settings.language" 
+                          @change="applyLanguageChange"
+                          class="custom-select appearance-none bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-gray-700 dark:text-gray-200 outline-none cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-600 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 transition-all duration-200 w-48 shadow-sm hover:shadow-md"
+                        >
+                          <option 
+                            v-for="locale in availableLocales" 
+                            :key="locale.code" 
+                            :value="locale.code"
+                            class="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200"
+                          >
+                            {{ locale.nativeName }}
+                          </option>
+                        </select>
+                        <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 dark:text-gray-500 transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                      </div>
+                    </div>
+
                     <div class="flex items-center justify-between group hover:bg-gray-50/50 dark:hover:bg-gray-900/50 p-3 rounded-lg transition-colors">
                       <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
                           <Icon name="font" :size="16" color="#6b7280" />
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">写作字体</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.general.fontFamily }}</div>
                         </div>
                       </div>
                       <div class="relative">
@@ -232,7 +268,7 @@
                           @change="applyChange" 
                           class="custom-select appearance-none bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2.5 pl-4 pr-10 text-sm font-medium text-gray-700 dark:text-gray-200 outline-none cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-600 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 transition-all duration-200 w-48 shadow-sm hover:shadow-md"
                         >
-                          <option value="" class="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200">跟随系统</option>
+                          <option value="" class="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200">{{ t.settings.general.followSystem }}</option>
                           <option 
                             v-for="font in fontList" 
                             :key="font.name" 
@@ -255,7 +291,7 @@
                           <Icon name="text-size" :size="16" color="#6b7280" />
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">默认字号</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.general.fontSize }}</div>
                         </div>
                       </div>
                       <div class="flex items-center gap-3 bg-gray-100 dark:bg-gray-900 rounded-lg px-3 py-1.5">
@@ -275,8 +311,8 @@
                           </svg>
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">自动保存</div>
-                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">编辑时自动保存内容</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.general.autoSave }}</div>
+                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.general.autoSaveDesc }}</div>
                         </div>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
@@ -295,8 +331,8 @@
                           </svg>
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">显示行号</div>
-                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">在编辑器左侧显示行号（类似IDE）</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.general.showLineNumbers }}</div>
+                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.general.showLineNumbersDesc }}</div>
                         </div>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
@@ -317,8 +353,8 @@
                           </svg>
                         </div>
                         <div>
-                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">大纲模式</div>
-                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">自动识别文章或小说的大纲结构</div>
+                          <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.general.outlineMode }}</div>
+                          <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.general.outlineModeDesc }}</div>
                         </div>
                       </div>
                       <label class="relative inline-flex items-center cursor-pointer">
@@ -335,7 +371,7 @@
           <!-- 运行日志 -->
           <div v-if="activeTab === 'logs'" class="space-y-6">
             <div>
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">运行日志</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">{{ t.settings.logs.title }}</h2>
               
               <div class="bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden transition-colors duration-300">
                 <!-- 日期选择器 -->
@@ -350,8 +386,8 @@
                       </svg>
                     </div>
                     <div>
-                      <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">选择日期</div>
-                      <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">查看不同日期的运行日志</div>
+                      <div class="text-sm font-medium text-gray-800 dark:text-white transition-colors">{{ t.settings.logs.selectDate }}</div>
+                      <div class="text-[10px] text-gray-400 dark:text-gray-500 transition-colors">{{ t.settings.logs.selectDateDesc }}</div>
                     </div>
                   </div>
                   <select 
@@ -359,7 +395,7 @@
                     @change="loadLogs"
                     class="custom-select appearance-none bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl py-2 pl-4 pr-10 text-sm font-medium text-gray-700 dark:text-gray-200 outline-none cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-600 focus:border-indigo-500 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 transition-all duration-200 shadow-sm hover:shadow-md"
                   >
-                    <option value="">今天</option>
+                    <option value="">{{ t.settings.logs.today }}</option>
                     <option 
                       v-for="date in availableLogDates" 
                       :key="date" 
@@ -428,7 +464,7 @@
                           <button
                             @click="copyLogEntry(log.fullText)"
                             class="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors group"
-                            :title="copyStates[log.fullText] === 'success' ? '已复制' : copyStates[log.fullText] === 'error' ? '复制失败' : '复制'"
+                            :title="copyStates[log.fullText] === 'success' ? t.settings.logs.copied : copyStates[log.fullText] === 'error' ? t.settings.logs.copyFailed : t.settings.logs.copy"
                           >
                             <svg 
                               v-if="copyStates[log.fullText] === 'success'"
@@ -477,7 +513,7 @@
           <!-- 关于 -->
           <div v-if="activeTab === 'about'" class="space-y-6">
             <div>
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">关于</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">{{ t.settings.about.title }}</h2>
               
               <div class="bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden divide-y divide-gray-50 dark:divide-gray-900 transition-colors duration-300">
                 <div class="p-6">
@@ -487,21 +523,21 @@
                     </div>
                     <div>
                       <div class="text-xl font-bold text-gray-800 dark:text-white transition-colors">YMhut-Write</div>
-                      <div class="text-sm text-gray-500 dark:text-gray-400 transition-colors">轻量级写作编辑器</div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400 transition-colors">{{ t.settings.about.subtitle }}</div>
                     </div>
                   </div>
                   <div class="space-y-3 text-sm text-gray-600 dark:text-gray-400 transition-colors">
                     <div class="flex items-center gap-3">
                       <Icon name="tag" :size="16" color="#9ca3af" />
-                      <span>版本: <span class="font-bold text-gray-800 dark:text-white transition-colors">{{ appVersion }}</span></span>
+                      <span>{{ t.settings.about.version }}: <span class="font-bold text-gray-800 dark:text-white transition-colors">{{ appVersion }}</span></span>
                     </div>
                     <div class="flex items-center gap-3">
                       <Icon name="user" :size="16" color="#9ca3af" />
-                      <span>作者: <span class="font-bold text-gray-800 dark:text-white transition-colors">YMhut</span></span>
+                      <span>{{ t.settings.about.author }}: <span class="font-bold text-gray-800 dark:text-white transition-colors">YMhut</span></span>
                     </div>
                     <div class="flex items-center gap-3">
                       <Icon name="calendar" :size="16" color="#9ca3af" />
-                      <span>更新日期: <span class="font-bold text-gray-800 dark:text-white transition-colors">{{ buildDate }}</span></span>
+                      <span>{{ t.settings.about.updateDate }}: <span class="font-bold text-gray-800 dark:text-white transition-colors">{{ buildDate }}</span></span>
                     </div>
                   </div>
                 </div>
@@ -515,7 +551,7 @@
                       <Icon name="github" :size="22" color="#6b7280" class="group-hover:!text-indigo-600 dark:group-hover:!text-indigo-400" />
                     </div>
                     <div class="flex-1">
-                      <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">开源仓库</div>
+                      <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{ t.settings.about.repository }}</div>
                       <div class="text-xs text-gray-400 dark:text-gray-500 transition-colors">GitHub - QWQLwToo/YMhut-Write</div>
                     </div>
                     <Icon name="external-link" :size="18" color="#9ca3af" class="group-hover:!text-indigo-600 dark:group-hover:!text-indigo-400 transition-colors" />
@@ -529,7 +565,7 @@
                       <Icon name="bug" :size="22" color="#6b7280" class="group-hover:!text-indigo-600 dark:group-hover:!text-indigo-400" />
                     </div>
                     <div class="flex-1">
-                      <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">问题反馈</div>
+                      <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{ t.settings.about.issues }}</div>
                       <div class="text-xs text-gray-400 dark:text-gray-500 transition-colors">提交 Bug 或功能建议</div>
                     </div>
                     <Icon name="external-link" :size="18" color="#9ca3af" class="group-hover:!text-indigo-600 dark:group-hover:!text-indigo-400 transition-colors" />
@@ -543,7 +579,7 @@
                       <Icon name="file-text" :size="22" color="#6b7280" class="group-hover:!text-indigo-600 dark:group-hover:!text-indigo-400" />
                     </div>
                     <div class="flex-1">
-                      <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">开源协议</div>
+                      <div class="text-sm font-bold text-gray-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{{ t.settings.about.license }}</div>
                       <div class="text-xs text-gray-400 dark:text-gray-500 transition-colors">查看许可证信息</div>
                     </div>
                     <Icon name="external-link" :size="18" color="#9ca3af" class="group-hover:!text-indigo-600 dark:group-hover:!text-indigo-400 transition-colors" />
@@ -552,8 +588,7 @@
 
                 <div class="p-6 bg-gray-50/50 dark:bg-black/50">
                   <div class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed transition-colors">
-                    <p class="mb-2">YMhut-Write 是一个专为轻量级写作设计的编辑器，支持 Markdown 和纯文本格式。</p>
-                    <p>适合写文章、小说、周报等各类文档。简洁、高效、专注创作。</p>
+                    <p class="whitespace-pre-line">{{ t.settings.about.description }}</p>
                   </div>
                 </div>
               </div>
@@ -566,7 +601,7 @@
     <transition name="toast">
       <div v-if="showToast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-black text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-[0_10px_30px_rgba(0,0,0,0.2)] flex items-center gap-2 z-50 transition-colors duration-300 border border-gray-800 dark:border-gray-800">
         <Icon name="check-circle" :size="16" color="#4ade80" />
-        <span>设置已保存</span>
+        <span>{{ t.messages.saved }}</span>
       </div>
     </transition>
   </div>
@@ -576,6 +611,10 @@
 import { ref, onMounted, reactive, computed, watch } from 'vue';
 import dayjs from 'dayjs';
 import Icon from '../components/Icon.vue';
+import { useI18n } from '../composables/useI18n';
+
+const { t, setLocale, initLocale, getAvailableLocales } = useI18n();
+const availableLocales = getAvailableLocales();
 
 const activeTab = ref('appearance');
 const fontList = ref([]);
@@ -588,15 +627,16 @@ const availableLogDates = ref([]);
 const selectedLogDate = ref('');
 const copyStates = ref({});
 
-const tabs = [
-  { id: 'appearance', label: '外观' },
-  { id: 'editor', label: '编辑器' },
-  { id: 'logs', label: '运行日志' },
-  { id: 'about', label: '关于' }
-];
+const tabs = computed(() => [
+  { id: 'appearance', label: t.value.settings.theme.title || '外观' },
+  { id: 'editor', label: t.value.common.editor || '编辑器' },
+  { id: 'logs', label: t.value.settings.logs.title || '运行日志' },
+  { id: 'about', label: t.value.settings.about.title || '关于' }
+]);
 
 const settings = reactive({
   theme: 'light',
+  language: 'zh-CN',
   fontFamily: '',
   fontSize: '18',
   showRawMd: false,
@@ -617,6 +657,19 @@ onMounted(async () => {
   fontList.value = await window.api.getSystemFonts();
   const current = await window.api.getSettings();
   Object.assign(settings, current);
+  
+  // 初始化语言
+  if (settings.language) {
+    initLocale(settings.language);
+    setLocale(settings.language);
+  }
+  
+  // 监听语言变化事件
+  if (window.api.onLanguageChanged) {
+    window.api.onLanguageChanged((locale) => {
+      setLocale(locale);
+    });
+  }
   
   if (settings.theme) {
     applyTheme(settings.theme);
@@ -661,16 +714,16 @@ const loadLogs = async () => {
 };
 
 const formatLogDate = (dateStr) => {
-  if (!dateStr) return '今天';
+  if (!dateStr) return t.value.settings.logs.today;
   const date = new Date(dateStr);
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
   
   if (date.toDateString() === today.toDateString()) {
-    return '今天';
+    return t.value.settings.logs.today;
   } else if (date.toDateString() === yesterday.toDateString()) {
-    return '昨天';
+    return t.value.settings.logs.yesterday;
   } else {
     return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
   }
@@ -724,6 +777,15 @@ const switchTheme = (theme) => {
 };
 
 const applyChange = async () => {
+  await window.api.saveSettings(JSON.parse(JSON.stringify(settings)));
+  showToast.value = true;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { showToast.value = false; }, 2000);
+};
+
+// 应用语言变化（立即生效）
+const applyLanguageChange = async () => {
+  setLocale(settings.language);
   await window.api.saveSettings(JSON.parse(JSON.stringify(settings)));
   showToast.value = true;
   if (toastTimer) clearTimeout(toastTimer);

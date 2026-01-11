@@ -16,7 +16,9 @@ const {
     syncTempToFile, 
     startTempCacheTimer, 
     stopTempCacheTimer,
-    cleanupAllTempFiles 
+    cleanupAllTempFiles,
+    cleanupTempDirOnStartup, // 启动时清理临时文件
+    getTempFilePath
 } = require('./utils/fileManager'); // [新增] 引入并发管理器和临时文件缓存
 const { logError, logInfo, readLogs, getAvailableLogDates } = require('./utils/logger'); // 日志模块
 
@@ -656,10 +658,15 @@ ipcMain.handle('create-article', async (event, { title, format }) => {
             insert.run(id, safeTitle, filePath, format, nowISO, nowISO);
         });
         
-        // 清理可能存在的旧临时文件（如果文件名冲突）
-        const tempPath = filePath + '.cache.tmp';
-        if (fs.existsSync(tempPath)) {
-            await fs.remove(tempPath);
+        // 清理可能存在的旧临时文件（兼容旧版本）
+        const oldTempPath = filePath + '.cache.tmp';
+        if (fs.existsSync(oldTempPath)) {
+            await fs.remove(oldTempPath);
+        }
+        // 清理系统临时目录中可能存在的临时文件
+        const systemTempPath = getTempFilePath(filePath);
+        if (fs.existsSync(systemTempPath)) {
+            await fs.remove(systemTempPath);
         }
 
         return { id, title: safeTitle, format, updated_at: nowISO };
@@ -1192,8 +1199,10 @@ ipcMain.handle('log-renderer-error', async (event, { message, stack, source, lin
 });
 
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     console.log('[Electron] App ready, creating window...');
+    // 应用启动时清理临时文件目录（清理上次异常退出时遗留的文件）
+    await cleanupTempDirOnStartup();
     createWindow();
 }).catch(err => {
     console.error('[Electron] Error in app.whenReady():', err);
@@ -1215,10 +1224,19 @@ app.on('window-all-closed', async () => {
     }
 });
 
-// 应用退出前清理
-app.on('before-quit', async () => {
+// 应用退出前清理（确保在所有窗口关闭前执行）
+app.on('before-quit', async (event) => {
     console.log('[Electron] App quitting, cleaning up...');
-    await cleanupAllTempFiles();
+    // 阻止默认退出行为，等待清理完成
+    event.preventDefault();
+    try {
+        await cleanupAllTempFiles();
+        console.log('[Electron] Cleanup completed, exiting...');
+        app.exit(0);
+    } catch (error) {
+        console.error('[Electron] Error during cleanup:', error);
+        app.exit(1);
+    }
 });
 
 // 处理未捕获的异常

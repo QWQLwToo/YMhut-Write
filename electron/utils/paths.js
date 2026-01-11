@@ -27,6 +27,7 @@ const paths = {
     bin: path.join(appRoot, 'bin'),
     data: path.join(appRoot, 'data'),
     docs: path.join(appRoot, 'docs'),
+    tmp: path.join(appRoot, 'tmp'), // 临时文件目录
     config: path.join(appRoot, 'config.ini')
 };
 

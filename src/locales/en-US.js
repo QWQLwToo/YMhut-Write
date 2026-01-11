@@ -64,6 +64,7 @@ export default {
   settings: {
     theme: {
       title: 'Theme Mode',
+      themeMode: 'Theme Mode',
       light: 'Light Mode',
       dark: 'Dark Mode'
     },
@@ -79,7 +80,9 @@ export default {
       sourceModeDesc: 'Show source code only, hide preview'
     },
     general: {
+      title: 'General Settings',
       fontFamily: 'Writing Font',
+      followSystem: 'Follow System',
       fontSize: 'Default Font Size',
       autoSave: 'Auto Save',
       autoSaveDesc: 'Automatically save content while editing',
@@ -115,15 +118,24 @@ export default {
   // Workspace
   workspace: {
     sidebar: {
+      documents: 'Documents',
+      history: 'History Archive',
       allDocuments: 'All Documents',
-      history: 'History',
+      refreshHistory: 'Refresh History',
       newDocument: 'New Document',
-      openFile: 'Open File'
+      openFile: 'Open File',
+      noTitle: 'Untitled Document',
+      noHistoryBackup: 'No History Backup',
+      autoBackup: 'Backups are automatically created when documents are saved',
+      selectOrCreate: 'Please select or create a document',
+      noDocumentSelected: 'No Document Selected',
+      selectFileFirst: 'Please select a file from the document library first'
     },
     editor: {
       title: 'Title',
       placeholder: 'Please enter document title...',
       wordCount: 'Characters',
+      startWriting: 'Start writing here...',
       status: {
         ready: 'Ready',
         writing: 'Syncing...',
@@ -146,7 +158,16 @@ export default {
     convert: {
       title: 'Format Conversion',
       currentFormat: 'Current Format',
-      selectFormat: 'Select Target Format'
+      selectFormat: 'Select Target Format',
+      renameTitle: 'Rename Document'
+    },
+    createModal: {
+      documentName: 'Document Name',
+      documentNamePlaceholder: 'Enter document name (optional)',
+      defaultNameHint: 'Leave blank to use default name',
+      documentFormat: 'Document Format',
+      plainText: 'Plain Text',
+      plainTextFormat: 'Plain Text Format'
     },
     delete: {
       title: 'Confirm Delete',
@@ -177,6 +198,16 @@ export default {
     exportFailed: 'Export failed',
     renameFailed: 'Rename failed',
     convertFailed: 'Format conversion failed',
-    openFileFailed: 'Failed to open file'
+    convertSuccess: 'Format conversion successful! Saved as new document.',
+    convertSuccessRefresh: 'Conversion successful, but new document not found. Please refresh the list to view.',
+    sameFormat: 'Same format, no conversion needed',
+    openFileFailed: 'Failed to open file',
+    openFailed: 'Open Failed',
+    unknownError: 'Unknown Error',
+    selectDocumentFirst: 'Please select a document first',
+    inputNewName: 'Enter new name',
+    restoreVersion: 'Are you sure you want to restore to the version from {time}?\nCurrent content will be overwritten.',
+    restoreSuccess: 'Restore successful',
+    restoreTitle: 'Restore History Version'
   }
 };

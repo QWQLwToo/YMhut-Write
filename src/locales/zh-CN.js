@@ -64,6 +64,7 @@ export default {
   settings: {
     theme: {
       title: '主题模式',
+      themeMode: '主题模式',
       light: '浅色模式',
       dark: '深色模式'
     },
@@ -79,7 +80,9 @@ export default {
       sourceModeDesc: '仅显示源代码，隐藏预览'
     },
     general: {
+      title: '通用设置',
       fontFamily: '写作字体',
+      followSystem: '跟随系统',
       fontSize: '默认字号',
       autoSave: '自动保存',
       autoSaveDesc: '编辑时自动保存内容',
@@ -108,22 +111,34 @@ export default {
       today: '今天',
       yesterday: '昨天',
       noLogs: '暂无日志记录',
-      noLogsDesc: '当出现错误时，日志将自动记录在这里'
+      noLogsDesc: '当出现错误时，日志将自动记录在这里',
+      copy: '复制',
+      copied: '已复制',
+      copyFailed: '复制失败'
     }
   },
   
   // 工作区
   workspace: {
     sidebar: {
+      documents: '文稿库',
+      history: '历史存档',
       allDocuments: '所有文稿',
-      history: '历史记录',
+      refreshHistory: '刷新历史记录',
       newDocument: '新建文档',
-      openFile: '打开文件'
+      openFile: '打开文件',
+      noTitle: '无标题文档',
+      noHistoryBackup: '暂无历史备份',
+      autoBackup: '文档保存时会自动创建备份',
+      selectOrCreate: '请选择或创建文档',
+      noDocumentSelected: '未选择文档',
+      selectFileFirst: '请先在文稿库选择一个文件'
     },
     editor: {
       title: '标题',
       placeholder: '请输入文档标题...',
       wordCount: '字符',
+      startWriting: '在此处开始你的创作...',
       status: {
         ready: '就绪',
         writing: '同步中...',
@@ -146,11 +161,20 @@ export default {
     convert: {
       title: '格式转换',
       currentFormat: '当前格式',
-      selectFormat: '选择目标格式'
+      selectFormat: '选择目标格式',
+      renameTitle: '重命名文档'
+    },
+    createModal: {
+      documentName: '文档名称',
+      documentNamePlaceholder: '输入文档名称（可选）',
+      defaultNameHint: '留空将使用默认名称',
+      documentFormat: '文档格式',
+      plainText: '纯文本',
+      plainTextFormat: '纯文本格式'
     },
     delete: {
       title: '确认删除',
-      message: '确定要删除此文档吗？',
+      message: '确定要删除此文档吗？此操作无法撤销。',
       deleteFile: '同时删除文件'
     },
     wordStats: {
@@ -177,6 +201,16 @@ export default {
     exportFailed: '导出失败',
     renameFailed: '重命名失败',
     convertFailed: '格式转换失败',
-    openFileFailed: '打开文件失败'
+    convertSuccess: '格式转换成功！已另存为新文档。',
+    convertSuccessRefresh: '转换成功，但未找到新文档。请刷新列表查看。',
+    sameFormat: '格式相同，无需转换',
+    openFileFailed: '打开文件失败',
+    openFailed: '打开失败',
+    unknownError: '未知错误',
+    selectDocumentFirst: '请先选择一个文档',
+    inputNewName: '输入新名称',
+    restoreVersion: '确定要恢复到 {time} 的版本吗？\n当前内容将被覆盖。',
+    restoreSuccess: '恢复成功',
+    restoreTitle: '恢复历史版本'
   }
 };
