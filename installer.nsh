@@ -7,23 +7,19 @@
 !include "MUI2.nsh"
 
 ; ----------------------------------------------------------------------------
-; 1. 定义启动函数 (修复编译报错 & 路径指向 bin)
+; 1. 启动函数 (已移除，因为不需要安装后运行选项)
 ; ----------------------------------------------------------------------------
-!ifdef NSIS_WIN32_MAKENSIS
-    !ifndef BUILD_UNINSTALLER
-        Function LaunchBinApp
-            ; [修复] 添加 .exe 后缀
-            ExecShell "" "$INSTDIR\bin\${APP_FILENAME}.exe"
-        FunctionEnd
-        
-        ; ---------------- [修改开始] ----------------
-        ; 注释掉以下三行以移除安装完成后的“运行”选项
-        ; !define MUI_FINISHPAGE_RUN
-        ; !define MUI_FINISHPAGE_RUN_TEXT "运行 ${PRODUCT_NAME}"
-        ; !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchBinApp"
-        ; ---------------- [修改结束] ----------------
-    !endif
-!endif
+; 如果需要安装完成后运行程序，可以取消注释以下代码：
+; !ifdef NSIS_WIN32_MAKENSIS
+;     !ifndef BUILD_UNINSTALLER
+;         Function LaunchBinApp
+;             ExecShell "" "$INSTDIR\bin\${APP_FILENAME}.exe"
+;         FunctionEnd
+;         !define MUI_FINISHPAGE_RUN
+;         !define MUI_FINISHPAGE_RUN_TEXT "运行 ${PRODUCT_NAME}"
+;         !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchBinApp"
+;     !endif
+; !endif
 
 ; ----------------------------------------------------------------------------
 ; [阶段 1] 初始化

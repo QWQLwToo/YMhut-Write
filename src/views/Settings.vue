@@ -118,8 +118,6 @@
           <!-- 编辑器设置 -->
           <div v-if="activeTab === 'editor'" class="space-y-6">
             <div>
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">{{ t.settings.editor.markdown }}</h2>
-              
               <div class="bg-white dark:bg-black rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden divide-y divide-gray-50 dark:divide-gray-900 transition-colors duration-300">
                 <!-- Markdown编辑器设置 -->
                 <div class="p-5">

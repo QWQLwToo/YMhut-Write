@@ -1,6 +1,8 @@
 {
   "name": "ymhut-write",
   "version": "1.0.0",
+  "description": "轻量级写作编辑器 - 支持 Markdown 和纯文本格式",
+  "author": "QWQLwToo",
   "main": "electron/main.js",
   "scripts": {
     "start": "npm run dev",
@@ -35,8 +37,47 @@
     "electron-builder": "^24.0.0",
     "electron-rebuild": "^3.2.9",
     "postcss": "^8.4.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.0.0",
+    "to-ico": "^1.1.5",
     "vite": "^5.0.0",
     "wait-on": "^7.0.0"
+  },
+  "build": {
+    "appId": "com.ymhut.write",
+    "productName": "YMhut-Write",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "YMhut-Write",
+      "include": "installer.nsh",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "electronDownload": {
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    }
   }
 }
